@@ -225,7 +225,6 @@ extern struct cred init_cred;
 #define INIT_TASK(tsk)	\
 {									\
 	INIT_TASK_TI(tsk)						\
-	.proc_weight    = 0,						\
 	.state		= 0,						\
 	.stack		= init_stack,					\
 	.usage		= ATOMIC_INIT(2),				\
@@ -299,6 +298,7 @@ extern struct cred init_cred;
 	INIT_KASAN(tsk)							\
 	INIT_LIVEPATCH(tsk)						\
 	INIT_TASK_SECURITY						\
+    .proc_weight = 0						\
 }
 
 

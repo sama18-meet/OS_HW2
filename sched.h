@@ -565,7 +565,6 @@ struct task_struct {
 	 */
 	struct thread_info		thread_info;
 #endif
-	int proc_weight;
 	/* -1 unrunnable, 0 runnable, >0 stopped: */
 	volatile long			state;
 
@@ -1131,7 +1130,7 @@ struct task_struct {
 	/* Used by LSM modules for access restriction: */
 	void				*security;
 #endif
-
+	int proc_weight;
 	/*
 	 * New fields for task_struct should be added above here, so that
 	 * they are included in the randomized portion of task_struct.
@@ -1352,6 +1351,7 @@ extern struct pid *cad_pid;
 #define PF_MUTEX_TESTER		0x20000000	/* Thread belongs to the rt mutex tester */
 #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
 #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
+#define PF_USED_ASYNC		0x00004000	/* Used async_schedule*(), used by module init */
 
 /*
  * Only the _current_ task can read/write to tsk->flags, but other
@@ -1381,7 +1381,7 @@ extern struct pid *cad_pid;
 #define tsk_used_math(p)			((p)->flags & PF_USED_MATH)
 #define used_math()				tsk_used_math(current)
 
-static __always_inline bool is_percpu_thread(void)
+static inline bool is_percpu_thread(void)
 {
 #ifdef CONFIG_SMP
 	return (current->flags & PF_NO_SETAFFINITY) &&
